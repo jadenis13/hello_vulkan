@@ -160,32 +160,32 @@ private:
 	VkQueue m_graphicsQueue = nullptr;
 	VkQueue m_presentQueue = nullptr;
 
-	VkSwapchainKHR m_swapchain;
+	VkSwapchainKHR m_swapchain = nullptr;
 	std::vector<VkImage> m_swapchainImages;
-	VkFormat m_swapchainImageFormat;
-	VkExtent2D m_swapchainExtent;
+	VkFormat m_swapchainImageFormat = VK_FORMAT_UNDEFINED;
+	VkExtent2D m_swapchainExtent{};
 	std::vector<VkImageView> m_swapchainImageViews;
 	std::vector<VkFramebuffer> m_swapchainFramebuffers;
 
-	VkRenderPass m_renderPass;
+	VkRenderPass m_renderPass = nullptr;
 
-	VkDescriptorPool m_descriptorPool;
+	VkDescriptorPool m_descriptorPool = nullptr;
 	std::vector<VkDescriptorSet> m_descriptorSets;
-	VkDescriptorSetLayout m_descriptorSetLayout;
-	VkPipelineLayout m_pipelineLayout;
-	VkPipeline m_graphicsPipeline;
+	VkDescriptorSetLayout m_descriptorSetLayout = nullptr;
+	VkPipelineLayout m_pipelineLayout = nullptr;
+	VkPipeline m_graphicsPipeline = nullptr;
 
-	VkCommandPool m_commandPool;
+	VkCommandPool m_commandPool = nullptr;
 
-	VkImage m_textureImage;
-	VkDeviceMemory m_textureImageMemory;
-	VkImageView m_textureImageView;
-	VkSampler m_textureSampler;
+	VkImage m_textureImage = nullptr;
+	VkDeviceMemory m_textureImageMemory = nullptr;
+	VkImageView m_textureImageView = nullptr;
+	VkSampler m_textureSampler = nullptr;
 
-	VkBuffer m_vertexBuffer;
-	VkDeviceMemory m_vertexBufferMemory;
-	VkBuffer m_indexBuffer;
-	VkDeviceMemory m_indexBufferMemory;
+	VkBuffer m_vertexBuffer = nullptr;
+	VkDeviceMemory m_vertexBufferMemory = nullptr;
+	VkBuffer m_indexBuffer = nullptr;
+	VkDeviceMemory m_indexBufferMemory = nullptr;
 
 	std::vector<VkBuffer> m_uniformBuffers;
 	std::vector<VkDeviceMemory> m_uniformBuffersMemory;
@@ -700,7 +700,7 @@ private:
 		}
 	}
 
-	VkImageView createImageView(VkImage image, VkFormat format) {
+	VkImageView createImageView(VkImage image, VkFormat format) const {
 		VkImageViewCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 		createInfo.image = image;
@@ -951,7 +951,7 @@ private:
 		}
 	}
 
-	VkCommandBuffer beginSingleTimeCommands() {
+	VkCommandBuffer beginSingleTimeCommands() const {
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -970,7 +970,7 @@ private:
 		return commandBuffer;
 	}
 
-	void endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer) const {
 		vkEndCommandBuffer(commandBuffer);
 
 		VkSubmitInfo submitInfo{};
@@ -1085,7 +1085,7 @@ private:
 	void createTextureImage() {
 		int texWidth, texHeight, texChannels;
 		stbi_uc* pixels = stbi_load("image.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-		VkDeviceSize imageSize = texWidth * texHeight * 4;
+		VkDeviceSize imageSize = static_cast<VkDeviceSize>(texWidth) * texHeight * 4;
 
 		if (!pixels) {
 			throw std::runtime_error("failed to load texture image!");
